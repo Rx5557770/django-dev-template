@@ -1,0 +1,12 @@
+services:
+  app:
+    container_name: django-dev-template
+    build: .
+    ports:
+      - 6688:6688
+    command: >
+      uv run python manage.py collectstatic &
+      uv run python manage.py makemigrations &
+      wait &&
+      uv run python manage.py migrate &&
+      uv run gunicorn core.wsgi:application --bind 0.0.0.0:6688
