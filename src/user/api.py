@@ -29,10 +29,14 @@ public_api = Router()
 ### 普通用户 ###
 @public_api.post("login", response={200: TokenSchema, 400: dict})
 def login(request, payload: LoginSchema):
-    user = get_object_or_404(User, username=payload.username)
+    user = User.objects.filter(username=payload.username).first()
+    if not user:
+        raise HttpError(400, "账号或密码错误")
     if not user.check_password(payload.password):
         raise HttpError(400, "账号或密码错误")
     token = create_token(user)
+    if not token:
+        raise HttpError(400, "账号状态异常")
     return {"access_token": token}
 
 

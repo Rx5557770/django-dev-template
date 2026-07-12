@@ -5,6 +5,8 @@ from django.conf import settings
 
 
 def create_token(user):
+    if not user.is_active:
+        return None
     token_payload = {
         "user_id": user.id,
         "exp": timezone.now() + timezone.timedelta(hours=1),
