@@ -63,6 +63,10 @@ def reset_password(request, payload: ResetPasswordSchema):
     return {"detail": "密码修改成功"}
 
 
+@public_api.get("profile", auth=AuthBearer(), response=out_model)
+def user_profile(request):
+    return request.auth
+
 ### 以下是通用格式 ###
 db_model = User
 
