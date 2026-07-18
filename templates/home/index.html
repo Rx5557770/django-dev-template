@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <script src="/static/js/tailwindcss-3.4.17.js"></script>
+</head>
+
+<body class="bg-gradient-to-br from-violet-500 to-purple-600">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-indigo-400 to-purple-400 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'front:home' %}" class="text-2xl font-bold text-white">
+                        Django App
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+                欢迎来到 Django 应用
+            </h1>
+            <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+                这是一个现代化的 Web 应用程序，提供用户认证、内容管理等核心功能
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="{% url 'front:login' %}"
+                    class="px-8 py-3 bg-white text-violet-600 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-xl">
+                    登录
+                </a>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div
+                class="bg-white/10 backdrop-blur-sm p-8 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
+                <div class="text-4xl mb-4">🔐</div>
+                <h3 class="text-2xl font-bold text-white mb-3">用户认证</h3>
+                <p class="text-white/80 leading-relaxed">
+                    安全可靠的用户注册和登录系统，保护您的账户安全
+                </p>
+            </div>
+            <div
+                class="bg-white/10 backdrop-blur-sm p-8 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
+                <div class="text-4xl mb-4">🎨</div>
+                <h3 class="text-2xl font-bold text-white mb-3">现代设计</h3>
+                <p class="text-white/80 leading-relaxed">
+                    采用最新设计趋势，提供流畅、直观的用户体验
+                </p>
+            </div>
+            <div
+                class="bg-white/10 backdrop-blur-sm p-8 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
+                <div class="text-4xl mb-4">📱</div>
+                <h3 class="text-2xl font-bold text-white mb-3">响应式布局</h3>
+                <p class="text-white/80 leading-relaxed">
+                    完美适配各种设备，从桌面到移动端都能获得最佳体验
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
