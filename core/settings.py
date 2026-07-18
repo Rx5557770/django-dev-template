@@ -137,9 +137,10 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS").split(",")
 
-STATIC_URL = "src/static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = f"/var/www/html/{BASE_DIR.parent.name}/staticfiles/"
-MEDIA_URL = "src/media/"  # 访问媒体文件的URL
+STATICFILES_DIRS = [BASE_DIR / "src/static"]
+MEDIA_URL = "/media/"  # 访问媒体文件的URL
 MEDIA_ROOT = f"/var/www/html/{BASE_DIR.parent.name}/media/"  # 存储上传文件的位置
 
 
