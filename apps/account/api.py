@@ -45,6 +45,10 @@ def login(request, payload: LoginSchema):
 def register(request, payload: RegisterSchema):
     if User.objects.filter(username=payload.username).exists():
         raise HttpError(400, "账号已存在")
+    if payload.email:
+        if User.objects.filter(email=payload.email).exists():
+            raise HttpError(400, "账号已存在")
+
     user = User.objects.create_user(**payload.model_dump())
 
     return {"detail": "注册成功"}

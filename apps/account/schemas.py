@@ -19,6 +19,7 @@ class LoginSchema(Schema):
 
 class RegisterSchema(ModelSchema):
     password2: str = Field(..., max_length=128, exclude=True)
+    email: EmailStr | None = Field(None)
 
     @model_validator(mode="after")
     def check_password(self):
