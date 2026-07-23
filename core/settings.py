@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    "apps.account",
 ]
 
 MIDDLEWARE = [
@@ -143,6 +144,6 @@ STATICFILES_DIRS = [BASE_DIR / "src/static"]
 MEDIA_URL = "/media/"  # 访问媒体文件的URL
 MEDIA_ROOT = f"/var/www/html/{BASE_DIR.parent.name}/media/"  # 存储上传文件的位置
 
-
+AUTH_USER_MODEL = "account.CustomUser"  # 自定义用户
 # 添加自己的app
 INSTALLED_APPS += []

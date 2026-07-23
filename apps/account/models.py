@@ -1,0 +1,9 @@
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+
+class CustomUser(AbstractUser):
+    class Meta:
+        verbose_name = "user"
+        verbose_name_plural = verbose_name
+        db_table = "auth_user"
