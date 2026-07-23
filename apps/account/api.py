@@ -8,10 +8,11 @@ from ninja.errors import HttpError
 
 from .schemas import (
     TokenSchema,
-    UserCreateSchema as create_model,
-    UserUpdateSchema as update_model,
-    UserOutSchema as out_model,
+    UserAdminCreateSchema as create_model,
+    UserAdminUpdateSchema as update_model,
     UserFilterSchema as filter_model,
+    UserAdminOutSchema as out_model,
+    UserPublicOutSchema as public_out_model,
     LoginSchema,
     RegisterSchema,
     ResetPasswordSchema,
@@ -42,17 +43,14 @@ def login(request, payload: LoginSchema):
 
 @public_api.post("register")
 def register(request, payload: RegisterSchema):
-    if (
-        User.objects.filter(username=payload.username).exists()
-        or User.objects.filter(email=payload.email).exists()
-    ):
+    if User.objects.filter(username=payload.username).exists():
         raise HttpError(400, "账号已存在")
-    user = User.objects.create_user(**payload.model_dump(exclude="password2"))
+    user = User.objects.create_user(**payload.model_dump())
 
     return {"detail": "注册成功"}
 
 
-@public_api.post("reset-password", auth=[AdminBearer(), AuthBearer()])
+@public_api.post("reset-password", auth=[AuthBearer(), AdminBearer()])
 def reset_password(request, payload: ResetPasswordSchema):
     user = request.auth
     if not user.check_password(payload.old_password):
@@ -63,7 +61,14 @@ def reset_password(request, payload: ResetPasswordSchema):
     return {"detail": "密码修改成功"}
 
 
-@public_api.get("profile", auth=[AdminBearer(), AuthBearer()], response=out_model)
+@public_api.get(
+    "profile", auth=[AuthBearer(), AdminBearer()], response=public_out_model
+)
+def user_profile(request):
+    return request.auth
+
+
+@private_api.get("profile", response=out_model)
 def user_profile(request):
     return request.auth
 
@@ -74,12 +79,9 @@ db_model = User
 
 @private_api.post("/", response=out_model)
 def create(request, payload: create_model):
-    if (
-        User.objects.filter(username=payload.username).exists()
-        or User.objects.filter(email=payload.email).exists()
-    ):
+    if User.objects.filter(username=payload.username).exists():
         raise HttpError(400, "账号创建失败")
-    return db_model.objects.create(**payload.model_dump())
+    return db_model.objects.create_user(**payload.model_dump())
 
 
 @private_api.get("/", response=list[out_model])
@@ -98,8 +100,11 @@ def detail_data(request, id: int):
 @private_api.put("/{id}", response=out_model)
 def update_data(request, id: int, payload: update_model):
     data = get_object_or_404(db_model, id=id)
-
-    updates = payload.model_dump(exclude_unset=True)
+    if payload.password:
+        updates = payload.model_dump(exclude_unset=True, exclude={"password"})
+        data.set_password(payload.password)
+    else:
+        updates = payload.model_dump(exclude_unset=True)
     for attr, value in updates.items():
         setattr(data, attr, value)
     data.save()

@@ -4,8 +4,6 @@ from ninja import Schema, FilterSchema, ModelSchema
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-username_field = Field(..., min_length=6, max_length=150)
-password_field = Field(..., min_length=6, max_length=128)
 
 
 class TokenSchema(Schema):
@@ -15,12 +13,11 @@ class TokenSchema(Schema):
 
 ### 普通用户操作 ###
 class LoginSchema(Schema):
-    username: str = username_field
-    password: str = password_field
+    username: str
+    password: str
 
 
 class RegisterSchema(ModelSchema):
-    email: EmailStr
     password2: str = Field(..., max_length=128, exclude=True)
 
     @model_validator(mode="after")
@@ -35,21 +32,21 @@ class RegisterSchema(ModelSchema):
 
 
 class ResetPasswordSchema(Schema):
-    old_password: str = password_field
-    new_password: str = password_field
+    old_password: str
+    new_password: str
 
 
 ### 管理员 ###
-class UserCreateSchema(ModelSchema):
+class UserAdminCreateSchema(ModelSchema):
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
+        fields = ["username", "password"]
 
 
-class UserUpdateSchema(ModelSchema):
+class UserAdminUpdateSchema(ModelSchema):
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
+        fields = ["username", "email", "password", "is_active"]
         fields_optional = "__all__"
 
 
@@ -58,7 +55,13 @@ class UserFilterSchema(FilterSchema):
     email: EmailStr | None = None
 
 
-class UserOutSchema(ModelSchema):
+class UserAdminOutSchema(ModelSchema):
     class Meta:
         model = User
-        fields = ["id", "username", "email", "is_active", "is_staff"]
+        fields = ["id", "username", "email", "is_active", "last_login", "date_joined"]
+
+
+class UserPublicOutSchema(ModelSchema):
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "is_active", "last_login", "date_joined"]
