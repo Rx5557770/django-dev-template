@@ -17,7 +17,7 @@ from .schemas import (
     ResetPasswordSchema,
 )
 from src.utils.pagination import CustomPagination
-from src.auth.auth import AuthBearer
+from src.auth.auth import AuthBearer, AdminBearer
 from src.utils.jwt import create_token
 
 User = get_user_model()
@@ -52,7 +52,7 @@ def register(request, payload: RegisterSchema):
     return {"detail": "注册成功"}
 
 
-@public_api.post("reset-password", auth=AuthBearer())
+@public_api.post("reset-password", auth=[AdminBearer(), AuthBearer()])
 def reset_password(request, payload: ResetPasswordSchema):
     user = request.auth
     if not user.check_password(payload.old_password):
@@ -63,7 +63,7 @@ def reset_password(request, payload: ResetPasswordSchema):
     return {"detail": "密码修改成功"}
 
 
-@public_api.get("profile", auth=AuthBearer(), response=out_model)
+@public_api.get("profile", auth=[AdminBearer(), AuthBearer()], response=out_model)
 def user_profile(request):
     return request.auth
 
