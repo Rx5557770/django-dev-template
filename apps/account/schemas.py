@@ -1,4 +1,4 @@
-# src/user/schemas.py
+# apps/account/schemas.py
 from pydantic import Field, EmailStr, model_validator
 from ninja import Schema, FilterSchema, ModelSchema
 from django.contrib.auth import get_user_model

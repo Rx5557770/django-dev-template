@@ -3,7 +3,10 @@ from ninja import NinjaAPI, Router
 from decouple import config
 
 from src.auth.auth import AdminBearer
-from src.user.api import private_api as user_private_api, public_api as user_public_api
+from apps.account.api import (
+    private_api as user_private_api,
+    public_api as user_public_api,
+)
 
 api = NinjaAPI()
 admin_api = Router()

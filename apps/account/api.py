@@ -1,4 +1,4 @@
-# src/user/api.py
+# apps/account/api.py
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
@@ -66,6 +66,7 @@ def reset_password(request, payload: ResetPasswordSchema):
 @public_api.get("profile", auth=AuthBearer(), response=out_model)
 def user_profile(request):
     return request.auth
+
 
 ### 以下是通用格式 ###
 db_model = User
