@@ -147,3 +147,38 @@ MEDIA_ROOT = f"/var/www/html/{BASE_DIR.parent.name}/media/"  # 存储上传文�
 AUTH_USER_MODEL = "account.CustomUser"  # 自定义用户
 # 添加自己的app
 INSTALLED_APPS += []
+
+
+# Celery 配置
+CELERY_TIMEZONE = TIME_ZONE  # 与 Django 时区保持一致
+CELERY_TASK_TRACK_STARTED = True  # 追踪任务开始状态
+if DEBUG:
+    CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"  # Redis 消息队列地址
+    CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/1"  # 存储任务结果的数据库地址
+else:
+    CELERY_BROKER_URL = "redis://redis:6379/0"
+    CELERY_RESULT_BACKEND = "redis://redis:6379/1"
+
+
+# 数据库备份
+if config("DB_BACKUP", cast=bool):
+    INSTALLED_APPS.append("dbbackup")
+    STORAGES = {
+        # 1. 默认文件存储（媒体文件）
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        # 2. 静态文件存储（避免 staticfiles.E005 报错）
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+        # 3. dbbackup 专属存储桶 (最新版 django-dbbackup 要求的格式)
+        "dbbackup": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            "OPTIONS": {
+                "location": BASE_DIR / "backups",
+            },
+        },
+    }
+    # 备份最多数量
+    DBBACKUP_CLEANUP_KEEP = 3

@@ -5,8 +5,20 @@ services:
     ports:
       - 6688:6688
     command: >
-      uv run python manage.py collectstatic &
-      uv run python manage.py makemigrations &
-      wait &&
+      sh -c "uv run python manage.py collectstatic --noinput &&
       uv run python manage.py migrate &&
-      uv run gunicorn core.wsgi:application --bind 0.0.0.0:6688
+      uv run gunicorn core.wsgi:application --bind 0.0.0.0:6688"
+    env_file:
+      - .env
+    
+  worker:
+    container_name: django-dev-template-worker
+    build: .
+    command: uv run celery -A core worker -l info -B
+    depends_on:
+      - redis
+
+
+  redis:
+    container_name: django-dev-template-redis
+    image: redis:7-alpine
