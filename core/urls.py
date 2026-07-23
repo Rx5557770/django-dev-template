@@ -24,7 +24,6 @@ from src.router.api import api
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", api.urls),  # api入口
-    path("", include("apps.front.urls")),  # 默认前端路径
 ]
 
 
