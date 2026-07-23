@@ -64,7 +64,7 @@ def reset_password(request, payload: ResetPasswordSchema):
 @public_api.get(
     "profile", auth=[AuthBearer(), AdminBearer()], response=public_out_model
 )
-def user_profile(request):
+def user_public_profile(request):
     return request.auth
 
 
